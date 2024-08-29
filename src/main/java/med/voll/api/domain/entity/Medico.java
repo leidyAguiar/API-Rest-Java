@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import med.voll.api.domain.dto.DadosAtualizacaoMedicoDTO;
 import med.voll.api.domain.dto.DadosCadastroMedicoDTO;
 import med.voll.api.enums.Especialidade;
 
@@ -42,5 +43,17 @@ public class Medico {
         this.crm = dadosMedicoDTO.crm();
         this.especialidade = dadosMedicoDTO.especialidade();
         this.endereco = new Endereco(dadosMedicoDTO.endereco());
+    }
+
+    public void atualizarInformacoes(DadosAtualizacaoMedicoDTO dados) {
+        if (dados.nome() != null) {
+            this.nome = dados.nome();
+        }
+        if (dados.telefone() != null) {
+            this.telefone = dados.telefone();
+        }
+        if (dados.dadosEnderecoDTO() != null) {
+            this.endereco.atualizarInformacoes(dados.dadosEnderecoDTO());
+        }
     }
 }

@@ -2,6 +2,7 @@ package med.voll.api.controller;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import med.voll.api.domain.dto.DadosAtualizacaoMedicoDTO;
 import med.voll.api.domain.dto.DadosListagemMedicoDTO;
 import med.voll.api.domain.dto.DadosCadastroMedicoDTO;
 import med.voll.api.domain.entity.Medico;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,5 +38,12 @@ public class MedicoController {
     @GetMapping
     public Page<DadosListagemMedicoDTO> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
         return repository.findAll(paginacao).map(DadosListagemMedicoDTO::new);
+    }
+
+    @PutMapping
+    @Transactional
+    public void atualizar(@RequestBody @Valid DadosAtualizacaoMedicoDTO dadosDTO) {
+        var medico = repository.getReferenceById(dadosDTO.id());
+        medico.atualizarInformacoes(dadosDTO);
     }
 }
