@@ -13,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,5 +47,10 @@ public class MedicoController {
     public void atualizar(@RequestBody @Valid DadosAtualizacaoMedicoDTO dadosDTO) {
         var medico = repository.getReferenceById(dadosDTO.id());
         medico.atualizarInformacoes(dadosDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public void excluir(@PathVariable Long id) {
+        repository.deleteById(id);
     }
 }
