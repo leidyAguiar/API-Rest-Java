@@ -1,5 +1,8 @@
 package med.voll.api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.domain.dto.DadosAtualizacaoPacienteDTO;
@@ -29,6 +32,11 @@ public class PacienteController {
     @Autowired
     private PacienteRepository repository;
 
+    @Operation(summary = "Cadastro de um paciente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Paciente cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     @PostMapping
     @Transactional
     public ResponseEntity<String> cadastrarPaciente(@RequestBody @Valid DadosCadastroPacienteDTO dadosPacienteDTO) {
@@ -37,11 +45,21 @@ public class PacienteController {
         return new ResponseEntity<>(mensagem, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Listagem de pacientes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Retorna uma lista de Pacientes"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida")
+    })
     @GetMapping
     public Page<DadosListagemPacienteDTO> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
         return repository.findAllByAtivoTrue(paginacao).map(DadosListagemPacienteDTO::new);
     }
 
+    @Operation(summary = "Atualiza informações de um paciente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Informações do paciente atualizadas com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     @PutMapping
     @Transactional
     public void atualizar(@RequestBody @Valid DadosAtualizacaoPacienteDTO dadosAtualizacaoPacienteDTO) {
@@ -49,6 +67,11 @@ public class PacienteController {
         paciente.atualizarInformacoes(dadosAtualizacaoPacienteDTO);
     }
 
+    @Operation(summary = "Exclusão de paciente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Paciente excluído com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida")
+    })
     @DeleteMapping("/{id}")
     @Transactional
     public void remover(@PathVariable Long id) {
